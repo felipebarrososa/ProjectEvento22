@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
             checkin: content
         };
 
-        fetch('/salvarCheckin', {  // Certifique-se de usar a URL correta
+        fetch('http://localhost:3000/salvarCheckin', {  // Certifique-se de usar a URL correta
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
