@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
             };
 
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://project-evento22.vercel.app/Data/cadastro", true);
+            xhr.open("POST", "https://project-evento22.vercel.app/cadastro", true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
