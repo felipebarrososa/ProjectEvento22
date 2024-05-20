@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
             checkin: content
         };
 
-        fetch('http://localhost:3000/salvarCheckin', {  // Certifique-se de usar a URL correta
+        fetch('https://project-evento22.vercel.app/Data/salvarCheckin', {  // Certifique-se de usar a URL correta
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
             checkin: JSON.stringify(data) // Serializa os dados do formulário para o campo checkin
         };
 
-        fetch('http://localhost:3000/salvarCheckin', {
+        fetch('https://project-evento22.vercel.app/Data/salvarCheckin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
