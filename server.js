@@ -9,7 +9,11 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 // Middleware para permitir solicitações de origens diferentes
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Servir arquivos estáticos da pasta public
 app.use(express.static('public'));
@@ -20,12 +24,9 @@ app.get('/cadastro.json', (req, res) => {
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const filePath = dataPath + today + '.json';
 
-  // Verifica se o arquivo JSON do dia atual existe
   if (fs.existsSync(filePath)) {
-    // Envia o arquivo JSON existente
     res.sendFile(filePath);
   } else {
-    // Retorna uma mensagem de erro se o arquivo não existir
     res.status(404).send('Arquivo de cadastro não encontrado para o dia atual.');
   }
 });
@@ -36,16 +37,13 @@ app.post('/cadastro', (req, res) => {
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const filePath = dataPath + today + '.json';
 
-  // Verifica se o arquivo JSON do dia atual já existe
   if (fs.existsSync(filePath)) {
-    // Se o arquivo existir, adiciona os dados ao arquivo JSON
     const newData = req.body;
     const currentData = JSON.parse(fs.readFileSync(filePath));
     currentData.push(newData);
     fs.writeFileSync(filePath, JSON.stringify(currentData, null, 2));
     res.json({ message: 'Cadastro realizado com sucesso.' });
   } else {
-    // Se o arquivo não existir, cria um novo arquivo JSON e adiciona os dados
     const newData = [req.body];
     fs.writeFileSync(filePath, JSON.stringify(newData, null, 2));
     res.json({ message: 'Arquivo de cadastro criado e dados adicionados com sucesso.' });
