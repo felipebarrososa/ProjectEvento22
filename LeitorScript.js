@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const qrCodeScanner = new Html5Qrcode("qr-reader");
     let isReading = false;
 
+    const API_URL = 'https://project-evento22.vercel.app'; // URL do backend em produção
+
     function iniciarLeituraQRCode() {
         Html5Qrcode.getCameras().then(devices => {
             if (devices && devices.length) {
@@ -44,8 +46,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    const API_URL = 'https://project-evento22.vercel.app';
-    
     function enviarDadosParaServidor(qrCodeMessage) {
         const data = JSON.parse(qrCodeMessage);
         const checkinData = {
