@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
             estado: data.estado
         };
 
-        fetch('https://project-evento22.vercel.app/salvarCheckin', {  // Use a URL correta da API
+        fetch('/salvarCheckin', {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function enviarDadosManuais(data) {
-        fetch('https://project-evento22.vercel.app/salvarCheckin', {  // Use a URL correta da API
+        fetch('/salvarCheckin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             console.log('Sucesso:', data);
-            alert(`Cadastro manual salvo com sucesso!\n\nNome: ${data.nome}\nEmail: ${data.email}\nWhatsApp: ${data.whatsapp}\nCidade: ${data.cidade}\nEstado: ${data.estado}`);
+            alert(`Cadastro manual salvo com sucesso!`);
             limparCamposFormulario();
         })
         .catch((error) => {
@@ -142,7 +142,6 @@ document.addEventListener("DOMContentLoaded", function() {
         modal.style.display = "none";
     });
 
-    // Formatação do número de telefone (WhatsApp) enquanto o usuário digita
     document.getElementById("whatsappManual").addEventListener("input", function() {
         var campo = document.getElementById("whatsappManual");
         var valor = campo.value;
