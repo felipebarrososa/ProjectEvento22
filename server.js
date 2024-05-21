@@ -3,22 +3,18 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
-
 const app = express();
 const port = process.env.PORT || 3000;
-
 // Conexão com o MongoDB
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
-
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Erro na conexão com o MongoDB:'));
 db.once('open', () => {
     console.log('Conectado ao MongoDB');
 });
-
 // Esquemas e modelos do Mongoose
 const cadastroSchema = new mongoose.Schema({
     nome: String,
@@ -28,7 +24,6 @@ const cadastroSchema = new mongoose.Schema({
     estado: String,
     createdAt: { type: Date, default: Date.now }
 });
-
 const checkinSchema = new mongoose.Schema({
     nome: String,
     email: String,
@@ -37,10 +32,8 @@ const checkinSchema = new mongoose.Schema({
     estado: String,
     checkinTime: { type: Date, default: Date.now }
 });
-
 const Cadastro = mongoose.model('Cadastro', cadastroSchema);
 const Checkin = mongoose.model('Checkin', checkinSchema);
-
 // Middlewares
 app.use(bodyParser.json());
 app.use(cors({
@@ -48,9 +41,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
 app.use(express.static(__dirname));
-
 // Rotas
 app.post('/cadastro', async (req, res) => {
     try {
@@ -63,7 +54,6 @@ app.post('/cadastro', async (req, res) => {
         res.status(500).json({ message: 'Erro ao salvar o cadastro', error: err.message });
     }
 });
-
 app.post('/salvarCheckin', async (req, res) => {
     try {
         console.log('Recebido novo check-in:', req.body);

@@ -7,9 +7,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const resultadoDiv = document.getElementById("resultado");
     const qrCodeScanner = new Html5Qrcode("qr-reader");
     let isReading = false;
-
-    const PROXY_URL = '/api/proxy';
-
     function iniciarLeituraQRCode() {
         Html5Qrcode.getCameras().then(devices => {
             if (devices && devices.length) {
@@ -45,17 +42,17 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error(`Erro ao obter as câmeras: ${err}`);
         });
     }
-
-    function enviarDadosParaServidor(content) {
-        const data = JSON.parse(content);
+    function enviarDadosParaServidor(qrCodeMessage) {
+        const data = JSON.parse(qrCodeMessage);
         const checkinData = {
-            dataSource: 'Cluster0',
-            database: 'myDatabase',
-            collection: 'checkins',
-            document: data
+            nome: data.nome,
+            email: data.email,
+            whatsapp: data.whatsapp,
+            cidade: data.cidade,
+            estado: data.estado
         };
 
-        fetch(PROXY_URL, {
+        fetch('/salvarCheckin', {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -74,37 +71,24 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function enviarDadosManuais(data) {
-        const checkinData = {
-            dataSource: 'Cluster0',
-            database: 'myDatabase',
-            collection: 'checkins',
-            document: data
-        };
-
-        fetch(PROXY_URL, {
+        fetch('/salvarCheckin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(checkinData)
+            body: JSON.stringify(data)
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erro na resposta do servidor');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             console.log('Sucesso:', data);
-            alert(`Cadastro manual salvo com sucesso!\n\nNome: ${data.document.nome}\nEmail: ${data.document.email}\nWhatsApp: ${data.document.whatsapp}\nCidade: ${data.document.cidade}\nEstado: ${data.document.estado}`);
-            limparCamposFormulario(); // Limpar os campos do formulário após o envio
+            alert(`Cadastro manual salvo com sucesso!`);
+            limparCamposFormulario();
         })
         .catch((error) => {
             console.error('Erro:', error);
             alert('Erro ao salvar o cadastro manual.');
         });
     }
-
     function limparCamposFormulario() {
         document.getElementById("nomeManual").value = '';
         document.getElementById("emailManual").value = '';
@@ -112,29 +96,24 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("cidadeManual").value = '';
         document.getElementById("estadoManual").value = '';
     }
-
     lerQRCodeButton.addEventListener("click", () => {
         if (!isReading) {
             isReading = true;
             iniciarLeituraQRCode();
         }
     });
-
     adicionarManualButton.addEventListener("click", () => {
         modal.style.display = "block";
-        limparCamposFormulario(); // Limpar os campos do formulário ao abrir o modal
+        limparCamposFormulario();
     });
-
     closeButton.addEventListener("click", () => {
         modal.style.display = "none";
     });
-
     window.addEventListener("click", (event) => {
         if (event.target == modal) {
             modal.style.display = "none";
         }
     });
-
     manualForm.addEventListener("submit", function(event) {
         event.preventDefault();
         const nome = document.getElementById("nomeManual").value;
@@ -142,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const whatsapp = document.getElementById("whatsappManual").value;
         const cidade = document.getElementById("cidadeManual").value;
         const estado = document.getElementById("estadoManual").value.toUpperCase();
-
         const data = {
             nome: nome,
             email: email,
@@ -150,19 +128,15 @@ document.addEventListener("DOMContentLoaded", function() {
             cidade: cidade,
             estado: estado
         };
-
         enviarDadosManuais(data);
         modal.style.display = "none";
     });
 
-    // Formatação do número de telefone (WhatsApp) enquanto o usuário digita
     document.getElementById("whatsappManual").addEventListener("input", function() {
         var campo = document.getElementById("whatsappManual");
         var valor = campo.value;
-
         valor = valor.replace(/\D/g, "");
         valor = valor.replace(/(\d{2})(\d{1,5})(\d{0,4})/, "($1) $2-$3");
-
         campo.value = valor;
     });
 });
