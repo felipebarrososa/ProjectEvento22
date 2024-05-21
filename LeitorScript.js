@@ -88,7 +88,12 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify(checkinData)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na resposta do servidor');
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Sucesso:', data);
             alert(`Cadastro manual salvo com sucesso!\n\nNome: ${data.document.nome}\nEmail: ${data.document.email}\nWhatsApp: ${data.document.whatsapp}\nCidade: ${data.document.cidade}\nEstado: ${data.document.estado}`);

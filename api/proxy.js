@@ -7,17 +7,28 @@ module.exports = async (req, res) => {
     if (req.method === 'POST') {
         const body = req.body;
 
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'api-key': API_KEY
-            },
-            body: JSON.stringify(body)
-        });
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'api-key': API_KEY
+                },
+                body: JSON.stringify(body)
+            });
 
-        const data = await response.json();
-        res.status(response.status).json(data);
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('Erro ao inserir dados:', data);
+                return res.status(response.status).json({ error: 'Erro ao inserir dados', details: data });
+            }
+
+            res.status(200).json(data);
+        } catch (error) {
+            console.error('Erro no servidor:', error);
+            res.status(500).json({ error: 'Erro no servidor', details: error.message });
+        }
     } else {
         res.setHeader('Allow', ['POST']);
         res.status(405).end(`Method ${req.method} Not Allowed`);
