@@ -8,8 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const qrCodeScanner = new Html5Qrcode("qr-reader");
     let isReading = false;
 
-    const API_URL = 'https://sa-east-1.aws.data.mongodb-api.com/app/data-oomgips/endpoint/data/v1/action/insertOne';
-    const API_KEY = 'SrWyoUgVrJtOD6MFft5M7QPh1NmquKxFbm8KkhrP9PTl3MOo4vhQOmWE48j75eYP';
+    const PROXY_URL = '/api/proxy';
 
     function iniciarLeituraQRCode() {
         Html5Qrcode.getCameras().then(devices => {
@@ -39,7 +38,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 ).catch(err => {
                     console.error(`Erro ao iniciar a câmera: ${err}`);
-                   
                     alert("Para usar esta funcionalidade, conceda permissão para acessar a câmera.");
                 });
             }
@@ -57,11 +55,10 @@ document.addEventListener("DOMContentLoaded", function() {
             document: data
         };
 
-        fetch(API_URL, {
+        fetch(PROXY_URL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'api-key': API_KEY
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(checkinData)
         })
@@ -84,11 +81,10 @@ document.addEventListener("DOMContentLoaded", function() {
             document: data
         };
 
-        fetch(API_URL, {
+        fetch(PROXY_URL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'api-key': API_KEY
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(checkinData)
         })
