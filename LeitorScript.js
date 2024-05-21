@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const qrCodeScanner = new Html5Qrcode("qr-reader");
     let isReading = false;
 
-    const API_URL = 'https://project-evento22.vercel.app'; // URL do backend em produção
+    const API_URL = 'https://sa-east-1.aws.data.mongodb-api.com/app/data-oomgips/endpoint/data/v1/action/insertOne';
+    const API_KEY = 'SrWyoUgVrJtOD6MFft5M7QPh1NmquKxFbm8KkhrP9PTl3MOo4vhQOmWE48j75eYP';
 
     function iniciarLeituraQRCode() {
         Html5Qrcode.getCameras().then(devices => {
@@ -38,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 ).catch(err => {
                     console.error(`Erro ao iniciar a câmera: ${err}`);
+                   
                     alert("Para usar esta funcionalidade, conceda permissão para acessar a câmera.");
                 });
             }
@@ -46,29 +48,24 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function enviarDadosParaServidor(qrCodeMessage) {
-        const data = JSON.parse(qrCodeMessage);
+    function enviarDadosParaServidor(content) {
+        const data = JSON.parse(content);
         const checkinData = {
-            nome: data.nome,
-            email: data.email,
-            whatsapp: data.whatsapp,
-            cidade: data.cidade,
-            estado: data.estado
+            dataSource: 'Cluster0',
+            database: 'myDatabase',
+            collection: 'checkins',
+            document: data
         };
 
-        fetch(`${API_URL}/salvarCheckin`, {
+        fetch(API_URL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'api-key': API_KEY
             },
             body: JSON.stringify(checkinData)
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erro na resposta do servidor');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             console.log('Sucesso:', data);
             alert('Check-in salvo com sucesso!');
@@ -80,23 +77,26 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function enviarDadosManuais(data) {
-        fetch(`${API_URL}/salvarCheckin`, {
+        const checkinData = {
+            dataSource: 'Cluster0',
+            database: 'myDatabase',
+            collection: 'checkins',
+            document: data
+        };
+
+        fetch(API_URL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'api-key': API_KEY
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(checkinData)
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erro na resposta do servidor');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             console.log('Sucesso:', data);
-            alert(`Cadastro manual salvo com sucesso!\n\nNome: ${data.nome}\nEmail: ${data.email}\nWhatsApp: ${data.whatsapp}\nCidade: ${data.cidade}\nEstado: ${data.estado}`);
-            limparCamposFormulario();
+            alert(`Cadastro manual salvo com sucesso!\n\nNome: ${data.document.nome}\nEmail: ${data.document.email}\nWhatsApp: ${data.document.whatsapp}\nCidade: ${data.document.cidade}\nEstado: ${data.document.estado}`);
+            limparCamposFormulario(); // Limpar os campos do formulário após o envio
         })
         .catch((error) => {
             console.error('Erro:', error);
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     adicionarManualButton.addEventListener("click", () => {
         modal.style.display = "block";
-        limparCamposFormulario();
+        limparCamposFormulario(); // Limpar os campos do formulário ao abrir o modal
     });
 
     closeButton.addEventListener("click", () => {
