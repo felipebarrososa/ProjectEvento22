@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function() {
     var successMessageDiv = document.getElementById("mensagem");
     var inputFields = document.querySelectorAll(".input-group");
     var submitBtn = document.getElementById("submitBtn");
-    var whatsappGroupButton = document.getElementById("whatsappGroupButton");
 
     form.addEventListener("submit", function(event) {
         event.preventDefault();
@@ -29,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
             };
 
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://project-evento22.vercel.app/cadastro", true);
+            xhr.open("POST", "/cadastro", true); // Atualize a URL para ser relativa
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
@@ -67,8 +66,4 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         successMessageDiv.style.display = "block";
     }
-
-    whatsappGroupButton.addEventListener("click", function() {
-        window.location.href = "https://chat.whatsapp.com/EXEMPLO_DO_LINK_DO_GRUPO"; // Substitua pelo link do seu grupo
-    });
 });

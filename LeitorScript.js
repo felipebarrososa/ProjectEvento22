@@ -44,12 +44,17 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function enviarDadosParaServidor(content) {
+    function enviarDadosParaServidor(qrCodeMessage) {
+        const data = JSON.parse(qrCodeMessage);
         const checkinData = {
-            checkin: content
+            nome: data.nome,
+            email: data.email,
+            whatsapp: data.whatsapp,
+            cidade: data.cidade,
+            estado: data.estado
         };
 
-        fetch('https://project-evento22.vercel.app/salvarCheckin', {  // Certifique-se de usar a URL correta
+        fetch('http://localhost:3000/salvarCheckin', {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -68,22 +73,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function enviarDadosManuais(data) {
-        const checkinData = {
-            checkin: JSON.stringify(data) // Serializa os dados do formulário para o campo checkin
-        };
-
-        fetch('https://project-evento22.vercel.app/salvarCheckin', {
+        fetch('http://localhost:3000/salvarCheckin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(checkinData)
+            body: JSON.stringify(data)
         })
-        .then(response => response.json()) // Espera uma resposta JSON
+        .then(response => response.json())
         .then(data => {
             console.log('Sucesso:', data);
             alert(`Cadastro manual salvo com sucesso!\n\nNome: ${data.nome}\nEmail: ${data.email}\nWhatsApp: ${data.whatsapp}\nCidade: ${data.cidade}\nEstado: ${data.estado}`);
-            limparCamposFormulario(); // Limpar os campos do formulário após o envio
+            limparCamposFormulario();
         })
         .catch((error) => {
             console.error('Erro:', error);
@@ -108,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     adicionarManualButton.addEventListener("click", () => {
         modal.style.display = "block";
-        limparCamposFormulario(); // Limpar os campos do formulário ao abrir o modal
+        limparCamposFormulario();
     });
 
     closeButton.addEventListener("click", () => {
@@ -141,7 +142,6 @@ document.addEventListener("DOMContentLoaded", function() {
         modal.style.display = "none";
     });
 
-    // Formatação do número de telefone (WhatsApp) enquanto o usuário digita
     document.getElementById("whatsappManual").addEventListener("input", function() {
         var campo = document.getElementById("whatsappManual");
         var valor = campo.value;
