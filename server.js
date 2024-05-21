@@ -54,6 +54,7 @@ app.use(express.static(__dirname));
 // Rotas
 app.post('/cadastro', async (req, res) => {
     try {
+        console.log('Recebido novo cadastro:', req.body);
         const novoCadastro = new Cadastro(req.body);
         await novoCadastro.save();
         res.json({ message: 'Cadastro realizado com sucesso.' });
@@ -65,6 +66,7 @@ app.post('/cadastro', async (req, res) => {
 
 app.post('/salvarCheckin', async (req, res) => {
     try {
+        console.log('Recebido novo check-in:', req.body);
         const novoCheckin = new Checkin(req.body);
         await novoCheckin.save();
         res.json({ message: 'Check-in realizado com sucesso.' });
@@ -75,7 +77,7 @@ app.post('/salvarCheckin', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/Cadastro.html');
 });
 
 app.listen(port, () => {
