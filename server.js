@@ -76,8 +76,9 @@ app.post('/salvarCheckin', async (req, res) => {
     }
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/Cadastro.html');
+// Middleware para tratar 404
+app.use((req, res, next) => {
+    res.status(404).json({ message: 'Página não encontrada' });
 });
 
 app.listen(port, () => {

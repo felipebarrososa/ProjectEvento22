@@ -44,6 +44,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    const API_URL = 'https://project-evento22.vercel.app';
+    
     function enviarDadosParaServidor(qrCodeMessage) {
         const data = JSON.parse(qrCodeMessage);
         const checkinData = {
@@ -54,14 +56,19 @@ document.addEventListener("DOMContentLoaded", function() {
             estado: data.estado
         };
 
-        fetch('/salvarCheckin', {  
+        fetch(`${API_URL}/salvarCheckin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(checkinData)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na resposta do servidor');
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Sucesso:', data);
             alert('Check-in salvo com sucesso!');
@@ -73,17 +80,22 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function enviarDadosManuais(data) {
-        fetch('/salvarCheckin', {
+        fetch(`${API_URL}/salvarCheckin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na resposta do servidor');
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Sucesso:', data);
-            alert(`Cadastro manual salvo com sucesso!`);
+            alert(`Cadastro manual salvo com sucesso!\n\nNome: ${data.nome}\nEmail: ${data.email}\nWhatsApp: ${data.whatsapp}\nCidade: ${data.cidade}\nEstado: ${data.estado}`);
             limparCamposFormulario();
         })
         .catch((error) => {
@@ -142,6 +154,7 @@ document.addEventListener("DOMContentLoaded", function() {
         modal.style.display = "none";
     });
 
+    // Formatação do número de telefone (WhatsApp) enquanto o usuário digita
     document.getElementById("whatsappManual").addEventListener("input", function() {
         var campo = document.getElementById("whatsappManual");
         var valor = campo.value;
