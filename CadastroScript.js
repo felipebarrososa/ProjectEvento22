@@ -66,4 +66,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         successMessageDiv.style.display = "block";
     }
+
+    whatsappGroupButton.addEventListener("click", function() {
+        window.location.href = "https://chat.whatsapp.com/EXEMPLO_DO_LINK_DO_GRUPO"; // Substitua pelo link do seu grupo
+    });
 });
