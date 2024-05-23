@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const resultadoDiv = document.getElementById("resultado");
     const qrCodeScanner = new Html5Qrcode("qr-reader");
     let isReading = false;
+
     function iniciarLeituraQRCode() {
         Html5Qrcode.getCameras().then(devices => {
             if (devices && devices.length) {
@@ -42,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error(`Erro ao obter as câmeras: ${err}`);
         });
     }
+
     function enviarDadosParaServidor(qrCodeMessage) {
         const data = JSON.parse(qrCodeMessage);
         const checkinData = {
@@ -52,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
             estado: data.estado
         };
 
-        fetch('/salvarCheckin', {  
+        fetch('/api/salvarCheckin', {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -71,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function enviarDadosManuais(data) {
-        fetch('/salvarCheckin', {
+        fetch('/api/salvarCheckin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -81,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             console.log('Sucesso:', data);
-            alert(`Cadastro manual salvo com sucesso!`);
+            alert('Cadastro manual salvo com sucesso!');
             limparCamposFormulario();
         })
         .catch((error) => {
@@ -89,6 +91,7 @@ document.addEventListener("DOMContentLoaded", function() {
             alert('Erro ao salvar o cadastro manual.');
         });
     }
+
     function limparCamposFormulario() {
         document.getElementById("nomeManual").value = '';
         document.getElementById("emailManual").value = '';
@@ -96,24 +99,29 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("cidadeManual").value = '';
         document.getElementById("estadoManual").value = '';
     }
+
     lerQRCodeButton.addEventListener("click", () => {
         if (!isReading) {
             isReading = true;
             iniciarLeituraQRCode();
         }
     });
+
     adicionarManualButton.addEventListener("click", () => {
         modal.style.display = "block";
         limparCamposFormulario();
     });
+
     closeButton.addEventListener("click", () => {
         modal.style.display = "none";
     });
+
     window.addEventListener("click", (event) => {
         if (event.target == modal) {
             modal.style.display = "none";
         }
     });
+
     manualForm.addEventListener("submit", function(event) {
         event.preventDefault();
         const nome = document.getElementById("nomeManual").value;
