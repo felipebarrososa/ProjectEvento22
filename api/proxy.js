@@ -1,36 +1,39 @@
-const fetch = require('node-fetch');
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const axios = require('axios');
 
-module.exports = async (req, res) => {
-    const API_URL = 'https://sa-east-1.aws.data.mongodb-api.com/app/data-oomgips/endpoint/data/v1/action/insertOne';
-    const API_KEY = 'SrWyoUgVrJtOD6MFft5M7QPh1NmquKxFbm8KkhrP9PTl3MOo4vhQOmWE48j75eYP';
+const app = express();
+const port = process.env.PORT || 3000;
 
-    if (req.method === 'POST') {
-        const body = req.body;
+app.use(bodyParser.json());
+app.use(cors());
 
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'api-key': API_KEY
-                },
-                body: JSON.stringify(body)
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                console.error('Erro ao inserir dados:', data);
-                return res.status(response.status).json({ error: 'Erro ao inserir dados', details: data });
-            }
-
-            res.status(200).json(data);
-        } catch (error) {
-            console.error('Erro no servidor:', error);
-            res.status(500).json({ error: 'Erro no servidor', details: error.message });
+app.post('/api/proxy', async (req, res) => {
+    const config = {
+        method: 'post',
+        url: 'https://sa-east-1.aws.data.mongodb-api.com/app/data-oomgips/endpoint/data/v1/action/insertOne',
+        headers: {
+            'Content-Type': 'application/json',
+            'api-key': 'SrWyoUgVrJtOD6MFft5M7QPh1NmquKxFbm8KkhrP9PTl3MOo4vhQOmWE48j75eYP'
+        },
+        data: {
+            collection: 'cadastro',
+            database: 'test',
+            dataSource: 'Cluster0',
+            document: req.body
         }
-    } else {
-        res.setHeader('Allow', ['POST']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
+    };
+
+    try {
+        const response = await axios(config);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao salvar o cadastro', error: error.message });
     }
-};
+});
+
+app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
+});

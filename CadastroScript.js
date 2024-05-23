@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
             };
 
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/api/proxy", true); // Atualize a URL para apontar para o proxy
+            xhr.open("POST", "/api/proxy", true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {

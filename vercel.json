@@ -1,6 +1,55 @@
 {
-    "rewrites":  [
-      {"source": "/(.*)", "destination": "/"}
-    ]
-  }
-  
+  "version": 2,
+  "builds": [
+    {
+      "src": "proxy.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.ico",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/proxy",
+      "dest": "/proxy.js"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/favicon.ico"
+    },
+    {
+      "src": "/Cadastro.html",
+      "dest": "/Cadastro.html"
+    },
+    {
+      "src": "/CadastroScript.js",
+      "dest": "/CadastroScript.js"
+    },
+    {
+      "src": "/CadastroStyle.css",
+      "dest": "/CadastroStyle.css"
+    },
+    {
+      "src": "/LeitorScript.js",
+      "dest": "/LeitorScript.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
