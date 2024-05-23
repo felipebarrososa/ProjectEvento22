@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
             };
 
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/api/proxy", true);
+            xhr.open("POST", "/api/proxy", true); // Atualize a URL para apontar para o proxy
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
         successMessageDiv.style.display = "block";
     }
 
+    var whatsappGroupButton = document.getElementById("whatsappGroupButton");
     whatsappGroupButton.addEventListener("click", function() {
         window.location.href = "https://chat.whatsapp.com/EXEMPLO_DO_LINK_DO_GRUPO"; // Substitua pelo link do seu grupo
     });

@@ -6,7 +6,7 @@
       "use": "@vercel/node"
     },
     {
-      "src": "Cadastro.html",
+      "src": "index.html",
       "use": "@vercel/static"
     }
   ],
@@ -17,8 +17,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/Cadastro.html"
+      "dest": "/index.html"
     }
   ]
 }
-  
