@@ -27,26 +27,26 @@ document.addEventListener("DOMContentLoaded", function() {
                 estado: estado
             };
 
-            fetch('/api/cadastro', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                loadingDiv.style.display = "none";
-                if (result.message) {
-                    showSuccessMessage(data);
-                } else {
-                    console.error('Erro ao enviar os dados:', result);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/cadastro", true); // Atualize a URL para ser relativa
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    loadingDiv.style.display = "none";
+                    if (xhr.status === 200) {
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            console.log(response);
+                            showSuccessMessage(data);
+                        } catch (err) {
+                            console.error('Erro ao analisar a resposta:', err);
+                        }
+                    } else {
+                        console.error('Erro ao enviar os dados:', xhr.responseText);
+                    }
                 }
-            })
-            .catch(error => {
-                console.error('Erro ao enviar os dados:', error);
-                loadingDiv.style.display = "none";
-            });
+            };
+            xhr.send(JSON.stringify(data));
         }, 2000); // Tempo de espera em milissegundos
     });
 
@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
         successMessageDiv.style.display = "block";
     }
 
+    var whatsappGroupButton = document.getElementById("whatsappGroupButton");
     whatsappGroupButton.addEventListener("click", function() {
         window.location.href = "https://chat.whatsapp.com/EXEMPLO_DO_LINK_DO_GRUPO"; // Substitua pelo link do seu grupo
     });

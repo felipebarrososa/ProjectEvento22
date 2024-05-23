@@ -27,7 +27,8 @@ app.use(express.static(__dirname));
 // Rotas
 app.post('/api/cadastro', async (req, res) => {
   const { nome, email, whatsapp, cidade, estado } = req.body;
-  
+  console.log('Recebido novo cadastro:', req.body);
+
   const query = 'INSERT INTO cadastros(nome, email, whatsapp, cidade, estado) VALUES($1, $2, $3, $4, $5) RETURNING *';
   const values = [nome, email, whatsapp, cidade, estado];
 
@@ -42,6 +43,7 @@ app.post('/api/cadastro', async (req, res) => {
 
 app.post('/api/salvarCheckin', async (req, res) => {
   const { nome, email, whatsapp, cidade, estado } = req.body;
+  console.log('Recebido novo check-in:', req.body);
 
   const query = 'INSERT INTO checkins(nome, email, whatsapp, cidade, estado, checkinTime) VALUES($1, $2, $3, $4, $5, NOW()) RETURNING *';
   const values = [nome, email, whatsapp, cidade, estado];
