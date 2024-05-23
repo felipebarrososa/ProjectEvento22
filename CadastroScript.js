@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         submitBtn.style.display = "none";
         loadingDiv.style.display = "block";
-
         setTimeout(function() {
             var nome = document.getElementById("nome").value;
             var email = document.getElementById("email").value;
@@ -28,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 estado: estado
             };
 
-            fetch('/api/proxy', {
+            fetch('/api/cadastro', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -38,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(result => {
                 loadingDiv.style.display = "none";
-                if (result.insertedId) {
+                if (result.message) {
                     showSuccessMessage(data);
                 } else {
                     console.error('Erro ao enviar os dados:', result);
@@ -72,7 +71,6 @@ document.addEventListener("DOMContentLoaded", function() {
         successMessageDiv.style.display = "block";
     }
 
-    var whatsappGroupButton = document.getElementById("whatsappGroupButton");
     whatsappGroupButton.addEventListener("click", function() {
         window.location.href = "https://chat.whatsapp.com/EXEMPLO_DO_LINK_DO_GRUPO"; // Substitua pelo link do seu grupo
     });

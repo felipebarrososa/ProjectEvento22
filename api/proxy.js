@@ -1,32 +1,29 @@
-const express = require('express');
-const axios = require('axios');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+const { Client } = require('pg');
 
-const app = express();
+module.exports = async (req, res) => {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ message: 'Method Not Allowed' });
+    }
 
-app.use(bodyParser.json());
-app.use(cors());
+    const { nome, email, whatsapp, cidade, estado } = req.body;
 
-app.post('/api/proxy', async (req, res) => {
+    const client = new Client({
+        connectionString: process.env.POSTGRES_CONNECTION_STRING
+    });
+
     try {
-        const response = await axios.post('https://sa-east-1.aws.data.mongodb-api.com/app/data-oomgips/endpoint/data/v1/action/insertOne', {
-            collection: 'cadastros',
-            database: 'test',
-            dataSource: 'Cluster0',
-            document: req.body
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'api-key': 'SrWyoUgVrJtOD6MFft5M7QPh1NmquKxFbm8KkhrP9PTl3MOo4vhQOmWE48j75eYP'
-            }
-        });
-        res.json(response.data);
+        await client.connect();
+
+        const query = 'INSERT INTO cadastros(nome, email, whatsapp, cidade, estado) VALUES($1, $2, $3, $4, $5) RETURNING *';
+        const values = [nome, email, whatsapp, cidade, estado];
+        
+        const result = await client.query(query, values);
+
+        await client.end();
+
+        res.status(200).json({ message: 'Cadastro realizado com sucesso.', data: result.rows[0] });
     } catch (error) {
-        console.error('Erro ao salvar no MongoDB:', error.response ? error.response.data : error.message);
+        console.error('Erro ao salvar o cadastro:', error);
         res.status(500).json({ message: 'Erro ao salvar o cadastro', error: error.message });
     }
-});
-
-
-module.exports = app;
+};
