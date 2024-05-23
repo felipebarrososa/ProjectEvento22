@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         submitBtn.style.display = "none";
         loadingDiv.style.display = "block";
+
         setTimeout(function() {
             var nome = document.getElementById("nome").value;
             var email = document.getElementById("email").value;
@@ -27,21 +28,26 @@ document.addEventListener("DOMContentLoaded", function() {
                 estado: estado
             };
 
-            fetch('/api/proxy.js', {
+            fetch('https://sa-east-1.aws.data.mongodb-api.com/app/data-oomgips/endpoint/data/v1/action/insertOne', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'api-key': 'SrWyoUgVrJtOD6MFft5M7QPh1NmquKxFbm8KkhrP9PTl3MOo4vhQOmWE48j75eYP'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({
+                    collection: 'cadastros', // Substitua com o nome da sua coleção
+                    database: 'test', // Substitua com o nome do seu banco de dados
+                    dataSource: 'Cluster0', // Substitua com o nome do seu cluster
+                    document: data
+                })
             })
             .then(response => response.json())
             .then(result => {
-                if (result.message === 'Cadastro realizado com sucesso.') {
-                    loadingDiv.style.display = "none";
+                loadingDiv.style.display = "none";
+                if (result.insertedId) {
                     showSuccessMessage(data);
                 } else {
                     console.error('Erro ao enviar os dados:', result);
-                    loadingDiv.style.display = "none";
                 }
             })
             .catch(error => {

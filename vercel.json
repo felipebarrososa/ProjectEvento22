@@ -2,10 +2,6 @@
   "version": 2,
   "builds": [
     {
-      "src": "proxy.js",
-      "use": "@vercel/node"
-    },
-    {
       "src": "*.html",
       "use": "@vercel/static"
     },
@@ -24,32 +20,8 @@
   ],
   "routes": [
     {
-      "src": "/api/proxy.js",
-      "dest": "/proxy.js"
-    },
-    {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico"
-    },
-    {
-      "src": "/Cadastro.html",
-      "dest": "/Cadastro.html"
-    },
-    {
-      "src": "/CadastroScript.js",
-      "dest": "/CadastroScript.js"
-    },
-    {
-      "src": "/CadastroStyle.css",
-      "dest": "/CadastroStyle.css"
-    },
-    {
-      "src": "/LeitorScript.js",
-      "dest": "/LeitorScript.js"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/$1"
     }
   ]
 }
