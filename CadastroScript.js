@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 estado: estado
             };
 
-            fetch('/api/proxy', {
+            fetch('/api/proxy.js', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -11,7 +11,7 @@ app.use(cors());
 app.post('/api/proxy', async (req, res) => {
     try {
         const response = await axios.post('https://sa-east-1.aws.data.mongodb-api.com/app/data-oomgips/endpoint/data/v1/action/insertOne', {
-            collection: 'cadastro',
+            collection: 'cadastros',
             database: 'test',
             dataSource: 'Cluster0',
             document: req.body
