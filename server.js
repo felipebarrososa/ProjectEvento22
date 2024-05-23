@@ -66,6 +66,31 @@ app.post('/salvarCheckin', async (req, res) => {
     }
 });
 
+// Rota para o proxy
+app.post('/api/proxy', async (req, res) => {
+    try {
+        const response = await fetch('https://sa-east-1.aws.data.mongodb-api.com/app/data-oomgips/endpoint/data/v1/action/insertOne', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'api-key': process.env.MONGODB_API_KEY // Coloque sua chave de API aqui
+            },
+            body: JSON.stringify({
+                collection: 'cadastros', // Substitua com o nome da sua coleção
+                database: 'meuBancoDeDados', // Substitua com o nome do seu banco de dados
+                dataSource: 'Cluster0', // Substitua com o nome do seu cluster
+                document: req.body
+            })
+        });
+
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (error) {
+        console.error('Erro ao enviar os dados:', error);
+        res.status(500).json({ message: 'Erro ao enviar os dados', error: error.message });
+    }
+});
+
 // Middleware para tratar 404
 app.use((req, res, next) => {
     res.status(404).json({ message: 'Página não encontrada' });

@@ -28,18 +28,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 estado: estado
             };
 
-            fetch('https://sa-east-1.aws.data.mongodb-api.com/app/data-oomgips/endpoint/data/v1/action/insertOne', {
+            fetch('/api/proxy', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'api-key': 'SrWyoUgVrJtOD6MFft5M7QPh1NmquKxFbm8KkhrP9PTl3MOo4vhQOmWE48j75eYP'
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    collection: 'cadastros', // Substitua com o nome da sua coleção
-                    database: 'test', // Substitua com o nome do seu banco de dados
-                    dataSource: 'Cluster0', // Substitua com o nome do seu cluster
-                    document: data
-                })
+                body: JSON.stringify(data)
             })
             .then(response => response.json())
             .then(result => {
