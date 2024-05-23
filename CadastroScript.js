@@ -27,22 +27,27 @@ document.addEventListener("DOMContentLoaded", function() {
                 estado: estado
             };
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/api/proxy", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        console.log(xhr.responseText);
-                        loadingDiv.style.display = "none";
-                        showSuccessMessage(data);
-                    } else {
-                        console.error('Erro ao enviar os dados:', xhr.responseText);
-                        loadingDiv.style.display = "none";
-                    }
+            fetch('/api/proxy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.message === 'Cadastro realizado com sucesso.') {
+                    loadingDiv.style.display = "none";
+                    showSuccessMessage(data);
+                } else {
+                    console.error('Erro ao enviar os dados:', result);
+                    loadingDiv.style.display = "none";
                 }
-            };
-            xhr.send(JSON.stringify(data));
+            })
+            .catch(error => {
+                console.error('Erro ao enviar os dados:', error);
+                loadingDiv.style.display = "none";
+            });
         }, 2000); // Tempo de espera em milissegundos
     });
 
