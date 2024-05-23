@@ -10,10 +10,6 @@
       "use": "@vercel/static"
     },
     {
-      "src": "*.ico",
-      "use": "@vercel/static"
-    },
-    {
       "src": "*.js",
       "use": "@vercel/static"
     }
@@ -24,12 +20,12 @@
       "dest": "/proxy.js"
     },
     {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico"
-    },
-    {
       "src": "/Cadastro.html",
       "dest": "/Cadastro.html"
+    },
+    {
+      "src": "/leitor.html",
+      "dest": "/leitor.html"
     },
     {
       "src": "/LeitorScript.js",
@@ -38,6 +34,14 @@
     {
       "src": "/CadastroScript.js",
       "dest": "/CadastroScript.js"
+    },
+    {
+      "src": "/CadastroStyle.css",
+      "dest": "/CadastroStyle.css"
+    },
+    {
+      "src": "/leitorStyle.css",
+      "dest": "/leitorStyle.css"
     },
     {
       "src": "/(.*)",
