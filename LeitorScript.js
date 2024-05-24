@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     
     function obterCheckins(data) {
-        let url = '/export/checkins';
+        let url = '/api/export/checkins';
         if (data) {
             url += `?data=${data}`;
         }

@@ -74,7 +74,7 @@ app.post('/api/salvarCheckin', async (req, res) => {
   }
 });
 
-app.get('/export/checkins', async (req, res) => {
+app.get('/api/export/checkins', async (req, res) => {
     const { data } = req.query;
     let query = 'SELECT * FROM checkins';
     let values = [];
@@ -133,3 +133,4 @@ if (process.env.NODE_ENV !== 'production') {
     console.log(`Servidor rodando em http://localhost:${port}`);
   });
 }
+    
