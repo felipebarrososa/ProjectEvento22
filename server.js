@@ -11,9 +11,9 @@ const port = process.env.PORT || 3000;
 // Conexão com o PostgreSQL usando pool de conexões
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
-  max: 10, // Número máximo de conexões no pool
-  idleTimeoutMillis: 30000, // Tempo que a conexão pode ficar ociosa antes de ser fechada
-  connectionTimeoutMillis: 2000, // Tempo máximo para tentar conectar antes de falhar
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000
 });
 
 pool.on('connect', () => {
@@ -75,29 +75,29 @@ app.post('/api/salvarCheckin', async (req, res) => {
 });
 
 app.get('/export/checkins', async (req, res) => {
-    const { data } = req.query;
-    let query = 'SELECT * FROM checkins';
-    let values = [];
+  const { data } = req.query;
+  let query = 'SELECT * FROM checkins';
+  let values = [];
 
-    if (data) {
-        query += ' WHERE DATE(checkinTime) = $1';
-        values.push(data);
+  if (data) {
+    query += ' WHERE DATE(checkinTime) = $1';
+    values.push(data);
+  }
+
+  try {
+    const result = await pool.query(query, values);
+    const checkins = result.rows;
+
+    // Verifique se há registros antes de prosseguir
+    if (checkins.length === 0) {
+      return res.status(404).json({ message: 'Nenhum check-in encontrado para a data fornecida.' });
     }
 
-    try {
-        const result = await pool.query(query, values);
-        const checkins = result.rows;
-
-        // Verifique se há registros antes de prosseguir
-        if (checkins.length === 0) {
-            return res.status(404).json({ message: 'Nenhum check-in encontrado para a data fornecida.' });
-        }
-
-        res.json(checkins);
-    } catch (err) {
-        console.error('Erro ao obter check-ins:', err);
-        res.status(500).json({ message: 'Erro ao obter check-ins', error: err.message });
-    }
+    res.json(checkins);
+  } catch (err) {
+    console.error('Erro ao obter check-ins:', err);
+    res.status(500).json({ message: 'Erro ao obter check-ins', error: err.message });
+  }
 });
 
 // Middleware para tratar 404
@@ -105,6 +105,12 @@ app.use((req, res, next) => {
   res.status(404).json({ message: 'Página não encontrada' });
 });
 
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
-});
+// Exporta o app para ser usado como função serverless
+module.exports = app;
+
+// Inicia o servidor se não estiver em ambiente serverless
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
+  });
+}
