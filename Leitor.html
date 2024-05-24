@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leitor de QR Code</title>
     <link rel="stylesheet" href="leitorstyle.css">
+    <script src="xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -12,6 +13,7 @@
         <div id="qr-reader"></div>
         <button id="lerQRCodeButton">Ler QR Code</button>
         <button id="adicionarManualButton" class="manual-button">Adicionar Manualmente</button>
+        <button id="exportButton" class="export-button">🡻</button>
         <div id="resultado"></div>
     </div>
     <div id="manualEntryModal" class="modal">
@@ -40,6 +42,19 @@
                     <input type="text" id="estadoManual" required placeholder="Exemplo" pattern="[A-Za-z]{2}">
                 </div>
                 <button type="submit">Enviar</button>
+            </form>
+        </div>
+    </div>
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Exportar Dados</h2>
+            <form id="exportForm">
+                <div class="input-group">
+                    <label for="exportDate">Data:</label>
+                    <input type="date" id="exportDate" required>
+                </div>
+                <button type="submit">Exportar</button>
             </form>
         </div>
     </div>

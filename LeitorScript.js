@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
     const lerQRCodeButton = document.getElementById("lerQRCodeButton");
     const adicionarManualButton = document.getElementById("adicionarManualButton");
+    const exportButton = document.getElementById("exportButton");
     const modal = document.getElementById("manualEntryModal");
-    const closeButton = document.querySelector(".close-button");
+    const exportModal = document.getElementById("exportModal");
+    const closeButton = document.querySelectorAll(".close-button");
     const manualForm = document.getElementById("manualForm");
+    const exportForm = document.getElementById("exportForm");
     const resultadoDiv = document.getElementById("resultado");
     const qrCodeScanner = new Html5Qrcode("qr-reader");
     let isReading = false;
@@ -100,6 +103,29 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("estadoManual").value = '';
     }
 
+    function exportarDadosParaExcel(checkins) {
+        const ws = XLSX.utils.json_to_sheet(checkins);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Checkins");
+        XLSX.writeFile(wb, "checkins.xlsx");
+    }
+
+    function obterCheckins(data) {
+        fetch(`/export/checkins?data=${data}`)
+            .then(response => response.json())
+            .then(checkins => {
+                if (Array.isArray(checkins)) {
+                    exportarDadosParaExcel(checkins);
+                } else {
+                    throw new Error("Dados retornados não são um array.");
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao exportar os dados:', error);
+                alert('Erro ao exportar os dados.');
+            });
+    }
+
     lerQRCodeButton.addEventListener("click", () => {
         if (!isReading) {
             isReading = true;
@@ -112,13 +138,22 @@ document.addEventListener("DOMContentLoaded", function() {
         limparCamposFormulario();
     });
 
-    closeButton.addEventListener("click", () => {
-        modal.style.display = "none";
+    exportButton.addEventListener("click", () => {
+        exportModal.style.display = "block";
+    });
+
+    closeButton.forEach(button => {
+        button.addEventListener("click", () => {
+            modal.style.display = "none";
+            exportModal.style.display = "none";
+        });
     });
 
     window.addEventListener("click", (event) => {
         if (event.target == modal) {
             modal.style.display = "none";
+        } else if (event.target == exportModal) {
+            exportModal.style.display = "none";
         }
     });
 
@@ -138,6 +173,13 @@ document.addEventListener("DOMContentLoaded", function() {
         };
         enviarDadosManuais(data);
         modal.style.display = "none";
+    });
+
+    exportForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        const exportDate = document.getElementById("exportDate").value;
+        obterCheckins(exportDate);
+        exportModal.style.display = "none";
     });
 
     document.getElementById("whatsappManual").addEventListener("input", function() {

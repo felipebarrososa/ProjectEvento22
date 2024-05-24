@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { Pool } = require('pg');
+const ExcelJS = require('exceljs');
 require('dotenv').config();
 
 const app = express();
@@ -71,6 +72,32 @@ app.post('/api/salvarCheckin', async (req, res) => {
     console.error('Erro ao salvar o check-in:', err);
     res.status(500).json({ message: 'Erro ao salvar o check-in', error: err.message });
   }
+});
+
+app.get('/export/checkins', async (req, res) => {
+    const { data } = req.query;
+    let query = 'SELECT * FROM checkins';
+    let values = [];
+
+    if (data) {
+        query += ' WHERE DATE(checkinTime) = $1';
+        values.push(data);
+    }
+
+    try {
+        const result = await pool.query(query, values);
+        const checkins = result.rows;
+
+        // Verifique se há registros antes de prosseguir
+        if (checkins.length === 0) {
+            return res.status(404).json({ message: 'Nenhum check-in encontrado para a data fornecida.' });
+        }
+
+        res.json(checkins);
+    } catch (err) {
+        console.error('Erro ao obter check-ins:', err);
+        res.status(500).json({ message: 'Erro ao obter check-ins', error: err.message });
+    }
 });
 
 // Middleware para tratar 404
