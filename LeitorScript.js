@@ -110,15 +110,29 @@ document.addEventListener("DOMContentLoaded", function() {
         XLSX.writeFile(wb, "checkins.xlsx");
     }
 
+    
     function obterCheckins(data) {
-        fetch(`/export/checkins?data=${data}`)
-            .then(response => response.json())
-            .then(checkins => {
-                if (Array.isArray(checkins)) {
-                    exportarDadosParaExcel(checkins);
-                } else {
-                    throw new Error("Dados retornados não são um array.");
+        let url = '/export/checkins';
+        if (data) {
+            url += `?data=${data}`;
+        }
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na resposta da rede.');
                 }
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'checkins.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
             })
             .catch(error => {
                 console.error('Erro ao exportar os dados:', error);

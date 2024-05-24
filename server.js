@@ -11,9 +11,9 @@ const port = process.env.PORT || 3000;
 // Conexão com o PostgreSQL usando pool de conexões
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
-  max: 10,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000
+  max: 10, // Número máximo de conexões no pool
+  idleTimeoutMillis: 30000, // Tempo que a conexão pode ficar ociosa antes de ser fechada
+  connectionTimeoutMillis: 2000, // Tempo máximo para tentar conectar antes de falhar
 });
 
 pool.on('connect', () => {
@@ -75,29 +75,48 @@ app.post('/api/salvarCheckin', async (req, res) => {
 });
 
 app.get('/export/checkins', async (req, res) => {
-  const { data } = req.query;
-  let query = 'SELECT * FROM checkins';
-  let values = [];
+    const { data } = req.query;
+    let query = 'SELECT * FROM checkins';
+    let values = [];
 
-  if (data) {
-    query += ' WHERE DATE(checkinTime) = $1';
-    values.push(data);
-  }
-
-  try {
-    const result = await pool.query(query, values);
-    const checkins = result.rows;
-
-    // Verifique se há registros antes de prosseguir
-    if (checkins.length === 0) {
-      return res.status(404).json({ message: 'Nenhum check-in encontrado para a data fornecida.' });
+    if (data) {
+        query += ' WHERE DATE(checkinTime) = $1';
+        values.push(data);
     }
 
-    res.json(checkins);
-  } catch (err) {
-    console.error('Erro ao obter check-ins:', err);
-    res.status(500).json({ message: 'Erro ao obter check-ins', error: err.message });
-  }
+    try {
+        const result = await pool.query(query, values);
+        const checkins = result.rows;
+
+        // Verifique se há registros antes de prosseguir
+        if (checkins.length === 0) {
+            return res.status(404).json({ message: 'Nenhum check-in encontrado para a data fornecida.' });
+        }
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Checkins');
+
+        worksheet.columns = [
+            { header: 'Nome', key: 'nome', width: 30 },
+            { header: 'Email', key: 'email', width: 30 },
+            { header: 'WhatsApp', key: 'whatsapp', width: 15 },
+            { header: 'Cidade', key: 'cidade', width: 20 },
+            { header: 'Estado', key: 'estado', width: 5 }
+        ];
+
+        checkins.forEach(row => {
+            worksheet.addRow(row);
+        });
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=checkins.xlsx');
+
+        await workbook.xlsx.write(res);
+        res.end();
+    } catch (err) {
+        console.error('Erro ao exportar dados:', err);
+        res.status(500).json({ message: 'Erro ao exportar dados', error: err.message });
+    }
 });
 
 // Middleware para tratar 404
