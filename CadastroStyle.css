@@ -128,15 +128,22 @@ button:hover {
 
 #mensagem {
     display: none;
-    text-align: center;
+    text-align: center; 
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    color: rgb(255, 255, 255); /* Cor preta para o texto */
 }
 
 #qrcode {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    background: white; /* Fundo branco */
+    padding: 10px;
+    border-radius: 10px;
 }
-
+    
 #whatsappGroupButton {
     margin-top: 20px;
 }
