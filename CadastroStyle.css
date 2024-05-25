@@ -42,7 +42,7 @@ body {
 }
 
 .texto h2 {
-    color: goldenrod; /* Cor dourada */
+    color: #daa520; /* Cor dourada */
     font-size: 24px; /* Ajuste conforme necessário */
     font-weight: bold;
     margin: 0;
@@ -143,7 +143,7 @@ button:hover {
     padding: 10px;
     border-radius: 10px;
 }
-    
+
 #whatsappGroupButton {
     margin-top: 20px;
 }

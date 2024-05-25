@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Leitor de QR Code</h2>
+        <h2>Realizar Checkins</h2>
         <div id="qr-reader"></div>
         <button id="lerQRCodeButton">Ler QR Code</button>
         <button id="adicionarManualButton" class="manual-button">Adicionar Manualmente</button>
@@ -23,7 +23,7 @@
             <form id="manualForm">
                 <div class="input-group">
                     <label for="nomeManual">Nome:</label>
-                    <input type="text" id="nomeManual" required>
+                    <input type="text" id="nomeManual" required placeholder="Seu nome">
                 </div>
                 <div class="input-group">
                     <label for="emailManual">E-mail:</label>
@@ -35,11 +35,41 @@
                 </div>
                 <div class="input-group">
                     <label for="cidadeManual">Cidade:</label>
-                    <input type="text" id="cidadeManual" required>
+                    <input type="text" id="cidadeManual" required placeholder="Sua Cidade">
                 </div>
+                
                 <div class="input-group">
                     <label for="estadoManual">Estado:</label>
-                    <input type="text" id="estadoManual" required placeholder="Exemplo" pattern="[A-Za-z]{2}">
+                    <select id="estadoManual" required>
+                        <option value="" disabled selected>Selecione seu estado</option>
+                        <option value="AC">Acre (AC)</option>
+                        <option value="AL">Alagoas (AL)</option>
+                        <option value="AP">Amapá (AP)</option>
+                        <option value="AM">Amazonas (AM)</option>
+                        <option value="BA">Bahia (BA)</option>
+                        <option value="CE">Ceará (CE)</option>
+                        <option value="DF">Distrito Federal (DF)</option>
+                        <option value="ES">Espírito Santo (ES)</option>
+                        <option value="GO">Goiás (GO)</option>
+                        <option value="MA">Maranhão (MA)</option>
+                        <option value="MT">Mato Grosso (MT)</option>
+                        <option value="MS">Mato Grosso do Sul (MS)</option>
+                        <option value="MG">Minas Gerais (MG)</option>
+                        <option value="PA">Pará (PA)</option>
+                        <option value="PB">Paraíba (PB)</option>
+                        <option value="PR">Paraná (PR)</option>
+                        <option value="PE">Pernambuco (PE)</option>
+                        <option value="PI">Piauí (PI)</option>
+                        <option value="RJ">Rio de Janeiro (RJ)</option>
+                        <option value="RN">Rio Grande do Norte (RN)</option>
+                        <option value="RS">Rio Grande do Sul (RS)</option>
+                        <option value="RO">Rondônia (RO)</option>
+                        <option value="RR">Roraima (RR)</option>
+                        <option value="SC">Santa Catarina (SC)</option>
+                        <option value="SP">São Paulo (SP)</option>
+                        <option value="SE">Sergipe (SE)</option>
+                        <option value="TO">Tocantins (TO)</option>
+                    </select>
                 </div>
                 <button type="submit">Enviar</button>
             </form>
