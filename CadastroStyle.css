@@ -3,6 +3,7 @@ body {
     padding: 0;
     font-family: Arial, sans-serif;
     background: url('/imagens/capa.jpg') no-repeat center center fixed;
+    background-color: rgb(1, 2, 8);
     background-size: cover;
     color: white;
     display: flex;
