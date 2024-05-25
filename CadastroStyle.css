@@ -75,6 +75,22 @@ input[type="tel"] {
     color: white;
 }
 
+.input-group select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.1); /* Fundo transparente */
+    color: white;
+}
+
+.input-group option {
+    background: rgba(0, 0, 0, 0.8); /* Fundo escuro para opções */
+    color: white;
+}
+
 label {
     margin-bottom: 10px;
     display: block;
