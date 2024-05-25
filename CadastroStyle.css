@@ -31,9 +31,9 @@ body {
 }
 
 .logo img {
-    width: 100px; /* Ajuste conforme necessário */
+    width: 300px; /* Ajuste conforme necessário */
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .texto {
@@ -131,7 +131,7 @@ button:hover {
     }
 
     .logo img {
-        width: 80px; /* Ajuste conforme necessário */
+        width: 150px; /* Ajuste conforme necessário */
     }
 
     .texto h2 {
